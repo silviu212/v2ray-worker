@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finalizează comanda | eSIM Europa</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <section>
+    <div class="wrap two-col">
+      <div class="card">
+        <h1>Finalizează comanda</h1>
+        <form id="checkout" novalidate>
+          <div class="field">
+            <label for="plan">Pachet</label>
+            <select id="plan" name="planId" required></select>
+            <div class="error" data-for="planId"></div>
+          </div>
+          <div class="field">
+            <label for="email">Email (aici primești codul QR)</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+            <div class="error" data-for="email"></div>
+          </div>
+          <div class="field">
+            <label for="name">Nume și prenume</label>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+            <div class="error" data-for="name"></div>
+          </div>
+          <div class="field">
+            <label class="check"><input type="checkbox" id="compat" required> Am verificat că telefonul meu are eSIM și este decodat.</label>
+            <div class="error" data-for="compat"></div>
+          </div>
+          <div class="field">
+            <label class="check"><input type="checkbox" id="terms" required> Accept <a href="/termeni.html" target="_blank">Termenii și condițiile</a> și <a href="/confidentialitate.html" target="_blank">Politica de confidențialitate</a>.</label>
+            <div class="error" data-for="acceptTerms"></div>
+          </div>
+          <button class="btn block" type="submit" id="pay-btn">Plătește</button>
+          <p class="error" id="form-error" role="alert"></p>
+        </form>
+      </div>
+      <aside class="card" id="summary">
+        <h2>Rezumat</h2>
+        <p id="sum-plan">—</p>
+        <p><b>Total: <span id="sum-price">—</span></b></p>
+        <p class="notice" id="mode-note" hidden>Mod demo: plata este simulată, nu se încasează bani.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+<script src="/layout.js"></script>
+<script>
+  const form = document.getElementById('checkout');
+  const select = document.getElementById('plan');
+  const payBtn = document.getElementById('pay-btn');
+  let plans = [];
+
+  function updateSummary() {
+    const p = plans.find((x) => x.id === select.value);
+    if (!p) return;
+    document.getElementById('sum-plan').textContent = `${p.name}: ${p.dataGb} GB, ${p.days} zile` + (p.minutes ? `, ${p.minutes} min, ${p.sms} SMS` : '');
+    document.getElementById('sum-price').textContent = p.price;
+    payBtn.textContent = `Plătește ${p.price}`;
+    history.replaceState(null, '', `?plan=${encodeURIComponent(p.id)}`);
+  }
+
+  api('/api/plans').then((list) => {
+    plans = list;
+    for (const p of list) {
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = `${p.name} - ${p.dataGb} GB / ${p.days} zile - ${p.price}`;
+      select.append(o);
+    }
+    const wanted = new URLSearchParams(location.search).get('plan');
+    if (list.some((p) => p.id === wanted)) select.value = wanted;
+    else select.value = (list.find((p) => p.popular) || list[0]).id;
+    updateSummary();
+  });
+  select.addEventListener('change', updateSummary);
+  appConfig.then((c) => { if (c.paymentMode === 'mock') document.getElementById('mode-note').hidden = false; });
+
+  function showErrors(fields) {
+    form.querySelectorAll('.error[data-for]').forEach((el) => { el.textContent = fields[el.dataset.for] || ''; });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.getElementById('form-error').textContent = '';
+    const fields = {};
+    if (!document.getElementById('compat').checked) fields.compat = 'Confirmă compatibilitatea telefonului';
+    if (!document.getElementById('terms').checked) fields.acceptTerms = 'Trebuie să accepți termenii și condițiile';
+    if (!form.email.checkValidity() || !form.email.value) fields.email = 'Adresa de email nu este validă';
+    if (!form.name.value.trim()) fields.name = 'Completează numele';
+    showErrors(fields);
+    if (Object.keys(fields).length) return;
+
+    payBtn.disabled = true;
+    payBtn.textContent = 'Se procesează…';
+    try {
+      const res = await api('/api/orders', { method: 'POST', body: {
+        planId: select.value, email: form.email.value, name: form.name.value, acceptTerms: true
+      } });
+      location.href = res.paymentUrl;
+    } catch (err) {
+      showErrors((err.data && err.data.fields) || {});
+      document.getElementById('form-error').textContent = err.message;
+      payBtn.disabled = false;
+      updateSummary();
+    }
+  });
+</script>
+</body>
+</html>

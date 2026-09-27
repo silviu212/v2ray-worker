@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plată simulată | eSIM Europa</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <section>
+    <div class="wrap" style="max-width:560px">
+      <div class="card">
+        <h1>Plată (simulare)</h1>
+        <p class="notice">Aceasta este pagina de plată din modul demo. În producție este înlocuită de procesatorul de plăți (ex. Stripe Checkout), iar cardul nu trece prin serverul tău.</p>
+        <p>Comanda: <b id="order-id">—</b></p>
+        <p>De plată: <b id="amount">—</b></p>
+        <p>Email: <span id="email">—</span></p>
+        <p style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="pay-ok">Simulează plată reușită</button>
+          <button class="btn danger" id="pay-fail">Simulează plată refuzată</button>
+        </p>
+        <p class="result" id="msg" role="alert"></p>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="/layout.js"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const id = q.get('order');
+  const token = q.get('token');
+  const msg = document.getElementById('msg');
+  api(`/api/orders/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`).then((o) => {
+    document.getElementById('order-id').textContent = o.id;
+    document.getElementById('amount').textContent = o.amount;
+    document.getElementById('email').textContent = o.email;
+    if (o.status === 'delivered') location.replace(`/comanda.html?order=${o.id}&token=${token}`);
+  }).catch((e) => { msg.textContent = e.message; msg.className = 'result err'; });
+
+  async function pay(outcome) {
+    document.querySelectorAll('button').forEach((b) => (b.disabled = true));
+    try {
+      const o = await api(`/api/orders/${encodeURIComponent(id)}/mock-pay`, { method: 'POST', body: { token, outcome } });
+      if (o.status === 'delivered') return location.replace(`/comanda.html?order=${o.id}&token=${token}`);
+      msg.textContent = 'Plata a fost refuzată. Poți încerca din nou.';
+      msg.className = 'result err';
+    } catch (e) {
+      msg.textContent = e.message;
+      msg.className = 'result err';
+    }
+    document.querySelectorAll('button').forEach((b) => (b.disabled = false));
+  }
+  document.getElementById('pay-ok').addEventListener('click', () => pay('success'));
+  document.getElementById('pay-fail').addEventListener('click', () => pay('fail'));
+</script>
+</body>
+</html>

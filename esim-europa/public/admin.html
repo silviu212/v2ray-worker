@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Admin comenzi | eSIM Europa</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <section>
+    <div class="wrap">
+      <h1>Comenzi</h1>
+      <form id="login" class="searchbox">
+        <input type="password" id="token" placeholder="ADMIN_TOKEN" aria-label="Token admin" autocomplete="current-password">
+        <button class="btn" type="submit">Încarcă</button>
+      </form>
+      <p class="result" id="msg" role="alert"></p>
+      <div class="table-wrap">
+        <table hidden id="table">
+          <thead><tr><th>Comandă</th><th>Data</th><th>Client</th><th>Pachet</th><th>Sumă</th><th>Status</th><th>ICCID</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="/layout.js"></script>
+<script>
+  const input = document.getElementById('token');
+  try { input.value = sessionStorage.getItem('adminToken') || ''; } catch {}
+  document.getElementById('login').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('msg');
+    try {
+      const rows = await api('/api/admin/orders', { headers: { Authorization: `Bearer ${input.value}` } });
+      try { sessionStorage.setItem('adminToken', input.value); } catch {}
+      const tbody = document.querySelector('#table tbody');
+      tbody.innerHTML = '';
+      for (const o of rows) {
+        const tr = document.createElement('tr');
+        const cells = [o.id, new Date(o.createdAt).toLocaleString('ro-RO'), `${o.name} <${o.email}>`, o.planId, o.amount, o.status, o.iccid || '—'];
+        cells.forEach((c, i) => { const td = document.createElement('td'); td.textContent = c; if (i === 5) td.className = `status ${c}`; tr.append(td); });
+        tbody.append(tr);
+      }
+      document.getElementById('table').hidden = false;
+      msg.textContent = `${rows.length} comenzi.`; msg.className = 'result';
+    } catch (err) {
+      msg.textContent = err.message; msg.className = 'result err';
+    }
+  });
+</script>
+</body>
+</html>

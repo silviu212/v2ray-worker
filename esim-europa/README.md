@@ -1,0 +1,49 @@
+# eSIM Europa – MVP
+
+Magazin online minimal pentru eSIM-uri de călătorie în Europa, inspirat de fluxul de pe esimeuropa.ro:
+alegi pachetul → plătești în lei → primești codul QR pe email și pe pagina comenzii.
+
+## Pornire
+
+```bash
+cd esim-europa
+npm install
+npm start          # http://localhost:3000
+npm test           # teste API (node:test)
+```
+
+## Ce conține
+
+| Pagină | Ce face |
+| --- | --- |
+| `/` | Hero, pachete (butoane „Cumpără”), „Cum funcționează”, căutare țări, verificare compatibilitate telefon, FAQ, buton WhatsApp flotant, meniu mobil |
+| `/checkout.html?plan=…` | Alegere/schimbare pachet, email, nume, confirmare compatibilitate, acceptare termeni, validare, buton „Plătește X lei” |
+| `/plata.html` | Plată **simulată** (reușită / refuzată) – doar în modul demo |
+| `/comanda.html?order=…&token=…` | Cod QR, instalare manuală (SM-DP+ + cod activare, butoane „Copiază”), instrucțiuni iPhone/Android, „Retrimite emailul”, stări: în așteptare / refuzată / livrată |
+| `/admin.html` | Lista comenzilor (cere `ADMIN_TOKEN`) |
+| `/termeni.html`, `/confidentialitate.html` | Șabloane – trebuie completate de un jurist |
+
+API: `GET /api/plans`, `GET /api/countries`, `GET /api/config`, `POST /api/orders`,
+`GET /api/orders/:id?token=`, `POST /api/orders/:id/mock-pay`, `POST /api/orders/:id/resend`, `GET /api/admin/orders`.
+
+## Configurare (variabile de mediu)
+
+| Variabilă | Rol |
+| --- | --- |
+| `PORT` | portul serverului (implicit 3000) |
+| `PUBLIC_URL` | adresa publică, folosită în linkurile din email și în Stripe |
+| `ADMIN_TOKEN` | parola pentru `/admin.html` (fără ea, admin este dezactivat) |
+| `WHATSAPP_NUMBER` | numărul pentru butonul WhatsApp, format internațional fără `+` |
+| `STRIPE_SECRET_KEY` | dacă este setată, plata trece prin Stripe Checkout în loc de simulare |
+| `ESIM_SMDP_ADDRESS` | adresa SM-DP+ folosită de profilul de test |
+| `DATA_DIR` | unde se salvează comenzile (`orders.json`) și emailurile (`outbox/`) |
+
+## Ce este simulat și trebuie înlocuit înainte de lansare
+
+1. **Furnizorul eSIM** (`lib/provider.js`) – generează un profil de test, nu un eSIM real. Trebuie conectat la API-ul unui furnizor/agregator eSIM.
+2. **Emailul** (`lib/mailer.js`) – scrie emailurile în `data/outbox/`. Trebuie conectat la un serviciu SMTP/API.
+3. **Plata** – modul Stripe (`lib/payments.js`) este scris, dar **nu a fost testat cu un cont Stripe real**; verifică-l în modul test Stripe. Pentru producție adaugă și webhook-ul `checkout.session.completed`, ca livrarea să nu depindă de revenirea clientului pe site.
+4. **Prețurile** (`lib/catalog.js`) – doar pachetul 50 GB / 31 zile / 149 lei (120 min, 1000 SMS) provine din informațiile publice despre esimeuropa.ro; restul sunt exemple (marcate „exemplu” pe site).
+5. **Lista de țări** – trebuie aliniată cu acoperirea furnizorului.
+6. **Stocarea** – un fișier JSON; pentru trafic real folosește o bază de date.
+7. **Facturare** (e-Factura/SmartBill etc.), datele firmei, termenii legali și GDPR.

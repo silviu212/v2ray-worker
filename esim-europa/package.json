@@ -1,0 +1,17 @@
+{
+  "name": "esim-europa-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MVP magazin online eSIM pentru Europa (catalog, checkout, livrare QR pe email).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

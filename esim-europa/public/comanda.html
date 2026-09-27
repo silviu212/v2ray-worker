@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Comanda ta | eSIM Europa</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main>
+  <section>
+    <div class="wrap">
+      <div id="loading" class="card">Se încarcă comanda…</div>
+
+      <div id="pending" class="card" hidden>
+        <h1>Așteptăm confirmarea plății</h1>
+        <p>Pagina se actualizează automat. Codul QR apare aici și pe email imediat ce plata este confirmată.</p>
+      </div>
+
+      <div id="failed" class="card" hidden>
+        <h1>Plata nu a reușit</h1>
+        <p>Nu s-a încasat nimic. Poți încerca din nou.</p>
+        <a class="btn" id="retry" href="/#pachete">Încearcă din nou</a>
+      </div>
+
+      <div id="delivered" hidden>
+        <h1>Gata! eSIM-ul tău este aici</h1>
+        <p class="lead">Comanda <b id="o-id"></b> · <span id="o-plan"></span> · <span id="o-amount"></span>. Am trimis codul și pe <b id="o-email"></b>.</p>
+        <p class="notice" id="test-note" hidden>Profil de test generat de MVP. Nu îl scana pe un telefon real: nu există un furnizor eSIM conectat.</p>
+        <div class="two-col">
+          <div class="card">
+            <h2>1. Scanează codul QR</h2>
+            <div class="qr"><img id="qr" alt="Cod QR pentru instalarea eSIM" width="280" height="280"></div>
+            <p>Deschide această pagină pe alt ecran (laptop) și scanează codul cu telefonul pe care vrei eSIM-ul.</p>
+            <h2>Sau instalare manuală</h2>
+            <p>Adresă SM-DP+:<br><code id="smdp"></code> <button class="btn secondary" data-copy="smdp" type="button">Copiază</button></p>
+            <p>Cod de activare:<br><code id="code"></code> <button class="btn secondary" data-copy="code" type="button">Copiază</button></p>
+            <p>ICCID: <code id="iccid"></code></p>
+          </div>
+          <div class="card">
+            <h2>2. Instalează</h2>
+            <details open><summary>iPhone</summary><ol>
+              <li>Setări → Celular → Adaugă eSIM.</li>
+              <li>Alege „Folosește codul QR” și scanează.</li>
+              <li>Denumește linia (ex. „Europa”) și setează-o pentru date celulare.</li>
+              <li>Activează „Roaming de date” pentru linia eSIM.</li>
+            </ol></details>
+            <details><summary>Android (Samsung, Pixel etc.)</summary><ol>
+              <li>Setări → Conexiuni / Rețea și internet → Manager SIM.</li>
+              <li>Adaugă eSIM → Scanează codul QR.</li>
+              <li>Setează eSIM-ul ca SIM pentru date mobile.</li>
+              <li>Activează „Roaming” pentru eSIM.</li>
+            </ol></details>
+            <p><button class="btn secondary" id="resend" type="button">Retrimite emailul</button></p>
+            <p class="result" id="resend-msg" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="notfound" class="card" hidden>
+        <h1>Comanda nu a fost găsită</h1>
+        <p>Verifică linkul din email sau scrie-ne pe WhatsApp.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="/layout.js"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const id = q.get('order');
+  const token = q.get('token');
+  const show = (which) => ['loading', 'pending', 'failed', 'delivered', 'notfound'].forEach((s) => (document.getElementById(s).hidden = s !== which));
+  let polls = 0;
+
+  async function load() {
+    try {
+      const o = await api(`/api/orders/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`);
+      if (o.status === 'delivered') return render(o);
+      if (o.status === 'failed') {
+        document.getElementById('retry').href = `/checkout.html?plan=${encodeURIComponent(o.plan.id)}`;
+        return show('failed');
+      }
+      show('pending');
+      if (polls++ < 60) setTimeout(load, 3000);
+    } catch (e) {
+      show('notfound');
+    }
+  }
+
+  function render(o) {
+    document.getElementById('o-id').textContent = o.id;
+    document.getElementById('o-plan').textContent = `${o.plan.name} ${o.plan.dataGb} GB / ${o.plan.days} zile`;
+    document.getElementById('o-amount').textContent = o.amount;
+    document.getElementById('o-email').textContent = o.email;
+    document.getElementById('qr').src = o.esim.qr;
+    document.getElementById('smdp').textContent = o.esim.smdp;
+    document.getElementById('code').textContent = o.esim.activationCode;
+    document.getElementById('iccid').textContent = o.esim.iccid;
+    document.getElementById('test-note').hidden = !o.esim.test;
+    show('delivered');
+  }
+
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const text = document.getElementById(b.dataset.copy).textContent;
+    try { await navigator.clipboard.writeText(text); b.textContent = 'Copiat ✔'; }
+    catch { b.textContent = 'Selectează manual'; }
+    setTimeout(() => (b.textContent = 'Copiază'), 2000);
+  }));
+
+  document.getElementById('resend').addEventListener('click', async (e) => {
+    const msg = document.getElementById('resend-msg');
+    e.target.disabled = true;
+    try {
+      await api(`/api/orders/${encodeURIComponent(id)}/resend`, { method: 'POST', body: { token } });
+      msg.textContent = '✔ Email retrimis.'; msg.className = 'result ok';
+    } catch (err) {
+      msg.textContent = err.message; msg.className = 'result err';
+    }
+    setTimeout(() => (e.target.disabled = false), 10000);
+  });
+
+  load();
+</script>
+</body>
+</html>
