@@ -3,145 +3,151 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MovSIM - eSIM pentru Europa | Activare instant</title>
-  <meta name="description" content="Cumpără online un eSIM pentru Europa, plătești în lei și primești codul QR pe email în câteva secunde.">
+  <title>MovSIM - eSIM pentru Europa</title>
+  <meta name="description" content="eSIM pentru Europa cu date, apeluri și SMS. Plătești în lei și primești codul QR pe email în câteva secunde.">
+  <meta name="theme-color" content="#130a22">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
-  <meta name="theme-color" content="#170c2b">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 <main>
-  <section class="hero">
+  <section class="hero" id="pachete">
     <div class="wrap">
-      <h1>eSIM pentru Europa, cu date, apeluri și SMS</h1>
-      <p class="lead">Cumperi online, plătești în lei și primești codul QR pe email în câteva secunde. Îl scanezi din setările telefonului și ai internet în toată Europa, fără roaming.</p>
-      <div class="actions">
-        <a class="btn" href="#pachete" id="hero-buy">Vezi pachetele</a>
-        <a class="btn secondary" href="#compatibilitate" id="hero-compat">Telefonul meu are eSIM?</a>
+      <div>
+        <p class="eyebrow">eSIM pentru 32 de țări din Europa</p>
+        <h1>Internet în Europa din clipa în care aterizezi.</h1>
+        <p class="lead">Alegi pachetul, plătești în lei și primești codul QR pe email în câteva secunde. Îl scanezi din setări și gata.</p>
+        <ul class="facts">
+          <li>Fără roaming</li>
+          <li>SIM-ul tău rămâne activ</li>
+          <li>Suport în română</li>
+        </ul>
       </div>
-      <ul class="badges">
-        <li>⚡ Livrare automată 24/7</li>
-        <li>🇷🇴 Suport în română pe WhatsApp</li>
-        <li>💳 Plată în lei, fără comision de conversie</li>
-        <li>📱 Îți păstrezi SIM-ul românesc</li>
-      </ul>
-    </div>
-  </section>
 
-  <section id="pachete">
-    <div class="wrap">
-      <h2>Alege pachetul</h2>
-      <div class="grid" id="plans"><p>Se încarcă pachetele…</p></div>
+      <form class="picker" id="picker" aria-labelledby="picker-title">
+        <div class="picker-title"><h2 id="picker-title" style="margin:0;font-size:1.15rem">Alege pachetul</h2><span>date + apeluri + SMS</span></div>
+        <div id="plans"><p class="muted">Se încarcă pachetele…</p></div>
+        <button class="btn block" type="submit" id="buy">Cumpără</button>
+        <p class="fine">Codul QR vine pe email imediat după plată.</p>
+      </form>
     </div>
   </section>
 
   <section id="cum-functioneaza">
     <div class="wrap">
       <h2>Cum funcționează</h2>
-      <div class="grid steps">
-        <div class="card"><h3>Alegi pachetul</h3><p>Selectezi câți GB și câte zile îți trebuie, apoi apeși „Cumpără”.</p></div>
-        <div class="card"><h3>Plătești online</h3><p>Completezi emailul și plătești cu cardul. Prețul este în lei.</p></div>
-        <div class="card"><h3>Primești codul QR</h3><p>Codul QR ajunge pe email imediat după confirmarea plății și apare și pe pagina comenzii.</p></div>
-        <div class="card"><h3>Scanezi și pleci</h3><p>Setări → Celular → Adaugă eSIM → scanezi codul. Durează aproximativ 2 minute.</p></div>
-      </div>
+      <ol class="steps">
+        <li><h3>Alegi și plătești</h3><p>Pachetul potrivit călătoriei tale, cu plata în lei.</p></li>
+        <li><h3>Primești codul QR</h3><p>Pe email și pe pagina comenzii, în câteva secunde.</p></li>
+        <li><h3>Scanezi și pleci</h3><p>Setări → Celular → Adaugă eSIM. Durează cam 2 minute.</p></li>
+      </ol>
     </div>
   </section>
 
-  <section id="acoperire">
+  <section id="verificari">
     <div class="wrap">
-      <h2>Țări acoperite</h2>
-      <div class="searchbox">
-        <input type="search" id="country-search" placeholder="Caută țara (ex. Italia)" aria-label="Caută țara">
-      </div>
-      <p class="result" id="country-result" aria-live="polite"></p>
-      <div class="chips" id="countries"></div>
-    </div>
-  </section>
-
-  <section id="compatibilitate">
-    <div class="wrap">
-      <h2>Verifică dacă telefonul tău are eSIM</h2>
-      <div class="card">
-        <form id="compat-form" class="searchbox">
-          <input type="text" id="compat-model" placeholder="Modelul telefonului (ex. iPhone 13, Galaxy S23, Pixel 7)" aria-label="Modelul telefonului">
-          <button class="btn" type="submit">Verifică</button>
-        </form>
-        <p class="result" id="compat-result" aria-live="polite"></p>
-        <p>Metoda sigură: formează <b>*#06#</b>. Dacă pe ecran apare un cod <b>EID</b>, telefonul are eSIM. Pe iPhone îl găsești și în Setări → General → Informații. Telefonul trebuie să fie decodat (nu blocat în rețea).</p>
+      <h2>Înainte să cumperi</h2>
+      <div class="checks">
+        <div class="card" id="compatibilitate">
+          <h3>Telefonul tău are eSIM?</h3>
+          <p>Scrie modelul sau formează <b>*#06#</b>: dacă apare un cod EID, ai eSIM.</p>
+          <form id="compat-form" class="searchbox">
+            <input type="text" id="compat-model" placeholder="ex. iPhone 13, Pixel 7" aria-label="Modelul telefonului">
+            <button class="btn secondary" type="submit">Verifică</button>
+          </form>
+          <p class="result" id="compat-result" aria-live="polite"></p>
+        </div>
+        <div class="card" id="acoperire">
+          <h3>Mergi într-o țară acoperită?</h3>
+          <p>Caută destinația în lista de țări.</p>
+          <input type="search" id="country-search" placeholder="ex. Italia" aria-label="Caută țara">
+          <p class="result" id="country-result" aria-live="polite"></p>
+          <details><summary>Toate țările</summary><div class="chips" id="countries"></div></details>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="intrebari">
-    <div class="wrap">
+    <div class="wrap faq">
       <h2>Întrebări frecvente</h2>
-      <details><summary>Ce este un eSIM?</summary><p>Este o cartelă SIM digitală, integrată în telefon. Nu ai nevoie de cartelă fizică: cumperi online, primești un cod QR pe email și îl scanezi din setările telefonului.</p></details>
-      <details><summary>Cum activez eSIM-ul?</summary><p>Setări → Celular (Date mobile) → Adaugă plan/eSIM → scanezi codul QR din email. Dacă nu poți scana, introduci manual adresa SM-DP+ și codul de activare afișate pe pagina comenzii.</p></details>
-      <details><summary>Pot folosi eSIM-ul și SIM-ul românesc în același timp?</summary><p>Da. SIM-ul tău rămâne activ pentru numărul de acasă, iar eSIM-ul îl setezi pentru date în Europa. Le alegi separat din meniul telefonului.</p></details>
-      <details><summary>Când primesc codul QR?</summary><p>Imediat după confirmarea plății, automat, inclusiv noaptea și în weekend. Poți cumpăra chiar și din aeroport, înainte de zbor.</p></details>
-      <details><summary>Când începe perioada de valabilitate?</summary><p>Depinde de furnizorul de rețea. Recomandarea este să instalezi eSIM-ul înainte de plecare și să activezi datele când ajungi la destinație.</p></details>
-      <details><summary>Nu am primit emailul. Ce fac?</summary><p>Verifică folderul Spam/Promoții. Pe pagina comenzii ai butonul „Retrimite emailul”, sau ne scrii pe WhatsApp.</p></details>
+      <details><summary>Ce este un eSIM?</summary><p>O cartelă SIM digitală, integrată în telefon. Cumperi online, primești un cod QR pe email și îl scanezi din setări. Nu ai nevoie de cartelă fizică.</p></details>
+      <details><summary>Pot folosi și SIM-ul românesc în același timp?</summary><p>Da. SIM-ul tău rămâne activ pentru numărul de acasă, iar eSIM-ul îl setezi pentru date în Europa.</p></details>
+      <details><summary>Când încep să curgă zilele?</summary><p>Depinde de rețeaua furnizorului. Recomandăm să instalezi eSIM-ul înainte de plecare și să pornești datele când ajungi.</p></details>
+      <details><summary>Nu am primit emailul. Ce fac?</summary><p>Verifică folderul Spam. Pe pagina comenzii ai butonul „Retrimite emailul” și găsești acolo același cod QR.</p></details>
     </div>
   </section>
 </main>
 
 <script src="/layout.js"></script>
 <script>
-  // Pachete
-  api('/api/plans').then((plans) => {
-    const box = document.getElementById('plans');
-    box.innerHTML = '';
-    for (const p of plans) {
-      const card = document.createElement('div');
-      card.className = 'card plan' + (p.popular ? ' popular' : '');
-      card.innerHTML = `
-        ${p.popular ? '<span class="tag">Cel mai ales</span>' : ''}
-        ${p.example ? '<span class="tag example" title="Preț exemplu, de înlocuit cu oferta reală">exemplu</span>' : ''}
-        <div class="name"></div>
-        <div class="gb"></div>
-        <ul></ul>
-        <div class="price"></div>
-        <div class="per-gb"></div>
-        <a class="btn block">Cumpără</a>`;
-      card.querySelector('.name').textContent = p.name;
-      card.querySelector('.gb').textContent = `${p.dataGb} GB`;
-      const ul = card.querySelector('ul');
-      const items = [`Valabil ${p.days} zile`, p.minutes ? `${p.minutes} minute internaționale` : 'Doar date mobile', p.sms ? `${p.sms} SMS` : null];
-      for (const t of items.filter(Boolean)) { const li = document.createElement('li'); li.textContent = t; ul.append(li); }
-      card.querySelector('.price').textContent = p.price;
-      card.querySelector('.per-gb').textContent = `${(p.priceBani / 100 / p.dataGb).toFixed(2).replace('.', ',')} lei/GB`;
-      const buy = card.querySelector('a.btn');
-      buy.href = `/checkout.html?plan=${encodeURIComponent(p.id)}`;
-      buy.dataset.plan = p.id;
-      box.append(card);
-    }
-  }).catch(() => { document.getElementById('plans').textContent = 'Pachetele nu au putut fi încărcate. Reîncarcă pagina.'; });
+  const lei = (bani) => (bani / 100).toFixed(2).replace('.', ',').replace(/,00$/, '') + ' lei';
 
-  // Țări + căutare
+  // Pachete, afișate ca opțiuni de ales direct în prima secțiune
+  let plans = [];
+  const box = document.getElementById('plans');
+  const buy = document.getElementById('buy');
+  function updateBuy() {
+    const p = plans.find((x) => x.id === new FormData(document.getElementById('picker')).get('plan'));
+    if (p) buy.textContent = `Cumpără · ${p.price}`;
+  }
+  api('/api/plans').then((list) => {
+    plans = list;
+    box.innerHTML = '';
+    for (const p of list) {
+      const row = document.createElement('label');
+      row.className = 'plan-option';
+      row.innerHTML = `
+        <input type="radio" name="plan">
+        <span><span class="gb"></span><span class="tags"></span><br><span class="meta"></span></span>
+        <span class="price"><span class="amount"></span><span class="per-gb"></span></span>`;
+      const input = row.querySelector('input');
+      input.value = p.id;
+      input.checked = !!p.popular;
+      row.querySelector('.gb').textContent = `${p.dataGb} GB`;
+      if (p.popular) row.querySelector('.tags').innerHTML = '<span class="pill">Cel mai ales</span>';
+      if (p.example) row.querySelector('.tags').innerHTML = '<span class="pill example" title="Preț exemplu, de înlocuit cu oferta reală">exemplu</span>';
+      row.querySelector('.meta').textContent = `${p.days} zile` + (p.minutes ? ` · ${p.minutes} min · ${p.sms} SMS` : ' · doar date');
+      row.querySelector('.amount').textContent = p.price;
+      row.querySelector('.per-gb').textContent = `${lei(Math.round(p.priceBani / p.dataGb))}/GB`;
+      box.append(row);
+    }
+    if (!list.some((p) => p.popular)) box.querySelector('input').checked = true;
+    updateBuy();
+  }).catch(() => { box.textContent = 'Pachetele nu au putut fi încărcate. Reîncarcă pagina.'; });
+  box.addEventListener('change', updateBuy);
+  document.getElementById('picker').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = new FormData(e.target).get('plan');
+    if (id) location.href = `/checkout.html?plan=${encodeURIComponent(id)}`;
+  });
+
+  // Căutare țări
   let countries = [];
   const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
   function renderCountries(filter) {
-    const box = document.getElementById('countries');
-    box.innerHTML = '';
-    const list = countries.filter((c) => norm(c).includes(norm(filter || '')));
-    for (const c of list) { const s = document.createElement('span'); s.textContent = c; box.append(s); }
     const res = document.getElementById('country-result');
-    if (!filter) { res.textContent = `${countries.length} țări în listă.`; res.className = 'result'; }
-    else if (list.length) { res.textContent = `✔ Acoperire disponibilă: ${list.join(', ')}`; res.className = 'result ok'; }
-    else { res.textContent = '✘ Țara nu este în lista de acoperire.'; res.className = 'result err'; }
+    const list = countries.filter((c) => norm(c).includes(norm(filter || '')));
+    if (!filter) { res.textContent = ''; res.className = 'result'; }
+    else if (list.length) { res.textContent = `✓ Acoperit: ${list.join(', ')}`; res.className = 'result ok'; }
+    else { res.textContent = 'Țara nu este în listă.'; res.className = 'result err'; }
   }
-  api('/api/countries').then((c) => { countries = c; renderCountries(''); });
+  api('/api/countries').then((c) => {
+    countries = c;
+    const chips = document.getElementById('countries');
+    for (const name of c) { const s = document.createElement('span'); s.textContent = name; chips.append(s); }
+  });
   document.getElementById('country-search').addEventListener('input', (e) => renderCountries(e.target.value));
 
   // Verificare compatibilitate (orientativă, pe familii de modele)
   const COMPAT = [
     { re: /iphone\s*(x[sr]|1[1-9]|se\s*\(?(2|3|20(20|22))|air)/i, ok: true, note: 'iPhone XS/XR și modelele mai noi au eSIM.' },
     { re: /iphone\s*(x|[4-8])\b/i, ok: false, note: 'iPhone X și modelele mai vechi nu au eSIM.' },
-    { re: /pixel\s*([3-9]|1\d)/i, ok: true, note: 'Google Pixel 3 și modelele mai noi au eSIM (unele variante 3a vândute în anumite țări nu au).' },
-    { re: /galaxy\s*(s(2[0-9])|z\s*(fold|flip)|note\s*20)/i, ok: true, note: 'Seriile Galaxy S20+ , Z Fold/Flip și Note 20 au în general eSIM; unele variante regionale nu au.' },
-    { re: /galaxy\s*a/i, ok: null, note: 'Doar unele modele Galaxy A au eSIM (ex. A54, A35, A55). Verifică cu *#06#.' }
+    { re: /pixel\s*([3-9]|1\d)/i, ok: true, note: 'Pixel 3 și modelele mai noi au eSIM (unele variante 3a din anumite țări nu au).' },
+    { re: /galaxy\s*(s(2[0-9])|z\s*(fold|flip)|note\s*20)/i, ok: true, note: 'Galaxy S20+, Z Fold/Flip și Note 20 au în general eSIM; unele variante regionale nu au.' },
+    { re: /galaxy\s*a/i, ok: null, note: 'Doar unele modele Galaxy A au eSIM. Verifică cu *#06#.' }
   ];
   document.getElementById('compat-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -149,8 +155,8 @@
     const res = document.getElementById('compat-result');
     if (!model) { res.textContent = 'Scrie modelul telefonului.'; res.className = 'result err'; return; }
     const hit = COMPAT.find((c) => c.re.test(model));
-    if (!hit) { res.textContent = 'Nu avem acest model în listă. Folosește metoda *#06# de mai jos.'; res.className = 'result'; return; }
-    res.textContent = (hit.ok === true ? '✔ ' : hit.ok === false ? '✘ ' : '? ') + hit.note;
+    if (!hit) { res.textContent = 'Nu avem modelul în listă. Formează *#06# și caută codul EID.'; res.className = 'result'; return; }
+    res.textContent = (hit.ok === true ? '✓ ' : hit.ok === false ? '✕ ' : '') + hit.note;
     res.className = 'result' + (hit.ok === true ? ' ok' : hit.ok === false ? ' err' : '');
   });
 </script>

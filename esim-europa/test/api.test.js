@@ -67,13 +67,13 @@ test('flux complet: comandă -> plată simulată -> eSIM livrat + email', async 
 });
 
 test('plata refuzată marchează comanda ca eșuată', async () => {
-  const { orderId, token } = await (await post('/api/orders', { planId: 'eu-3gb-7z', email: 'a@b.ro', name: 'X', acceptTerms: true })).json();
+  const { orderId, token } = await (await post('/api/orders', { planId: 'eu-10gb-15z', email: 'a@b.ro', name: 'X', acceptTerms: true })).json();
   const o = await (await post(`/api/orders/${orderId}/mock-pay`, { token, outcome: 'fail' })).json();
   assert.strictEqual(o.status, 'failed');
 });
 
 test('comanda nu poate fi citită fără token corect', async () => {
-  const { orderId } = await (await post('/api/orders', { planId: 'eu-3gb-7z', email: 'a@b.ro', name: 'X', acceptTerms: true })).json();
+  const { orderId } = await (await post('/api/orders', { planId: 'eu-10gb-15z', email: 'a@b.ro', name: 'X', acceptTerms: true })).json();
   assert.strictEqual((await fetch(`${base}/api/orders/${orderId}?token=gresit`)).status, 404);
   assert.strictEqual((await fetch(`${base}/api/orders/${orderId}`)).status, 404);
 });

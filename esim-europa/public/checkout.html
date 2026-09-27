@@ -6,50 +6,48 @@
   <title>Finalizează comanda | MovSIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
-  <meta name="theme-color" content="#170c2b">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <meta name="theme-color" content="#130a22">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 <main>
   <section>
-    <div class="wrap two-col">
-      <div class="card">
-        <h1>Finalizează comanda</h1>
-        <form id="checkout" novalidate>
-          <div class="field">
-            <label for="plan">Pachet</label>
-            <select id="plan" name="planId" required></select>
-            <div class="error" data-for="planId"></div>
-          </div>
-          <div class="field">
-            <label for="email">Email (aici primești codul QR)</label>
-            <input type="email" id="email" name="email" autocomplete="email" required>
-            <div class="error" data-for="email"></div>
-          </div>
-          <div class="field">
-            <label for="name">Nume și prenume</label>
-            <input type="text" id="name" name="name" autocomplete="name" required>
-            <div class="error" data-for="name"></div>
-          </div>
-          <div class="field">
-            <label class="check"><input type="checkbox" id="compat" required> Am verificat că telefonul meu are eSIM și este decodat.</label>
-            <div class="error" data-for="compat"></div>
-          </div>
-          <div class="field">
-            <label class="check"><input type="checkbox" id="terms" required> Accept <a href="/termeni.html" target="_blank">Termenii și condițiile</a> și <a href="/confidentialitate.html" target="_blank">Politica de confidențialitate</a>.</label>
-            <div class="error" data-for="acceptTerms"></div>
-          </div>
-          <button class="btn block" type="submit" id="pay-btn">Plătește</button>
-          <p class="error" id="form-error" role="alert"></p>
-        </form>
-      </div>
-      <aside class="card" id="summary">
-        <h2>Rezumat</h2>
-        <p id="sum-plan">—</p>
-        <p><b>Total: <span id="sum-price">—</span></b></p>
+    <div class="wrap narrow">
+      <p class="eyebrow"><a href="/#pachete">← Înapoi la pachete</a></p>
+      <h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">Finalizează comanda</h1>
+      <form id="checkout" class="card" style="margin-top:24px" novalidate>
+        <div class="field">
+          <label for="plan">Pachet</label>
+          <select id="plan" name="planId" required></select>
+          <div class="error" data-for="planId"></div>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" placeholder="aici primești codul QR" required>
+          <div class="error" data-for="email"></div>
+        </div>
+        <div class="field">
+          <label for="name">Nume și prenume</label>
+          <input type="text" id="name" name="name" autocomplete="name" required>
+          <div class="error" data-for="name"></div>
+        </div>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="compat" required> Telefonul meu are eSIM și nu este blocat în rețea.</label>
+          <div class="error" data-for="compat"></div>
+        </div>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="terms" required> <span>Accept <a href="/termeni.html" target="_blank">Termenii</a> și <a href="/confidentialitate.html" target="_blank">Politica de confidențialitate</a>.</span></label>
+          <div class="error" data-for="acceptTerms"></div>
+        </div>
+        <div id="summary" style="margin-bottom:18px">
+          <div class="summary-row"><span id="sum-plan">—</span><span id="sum-days"></span></div>
+          <div class="summary-row"><span>Total</span><span id="sum-price">—</span></div>
+        </div>
+        <button class="btn block" type="submit" id="pay-btn">Plătește</button>
+        <p class="error" id="form-error" role="alert"></p>
         <p class="notice" id="mode-note" hidden>Mod demo: plata este simulată, nu se încasează bani.</p>
-      </aside>
+      </form>
     </div>
   </section>
 </main>
@@ -63,7 +61,8 @@
   function updateSummary() {
     const p = plans.find((x) => x.id === select.value);
     if (!p) return;
-    document.getElementById('sum-plan').textContent = `${p.name}: ${p.dataGb} GB, ${p.days} zile` + (p.minutes ? `, ${p.minutes} min, ${p.sms} SMS` : '');
+    document.getElementById('sum-plan').textContent = `${p.dataGb} GB` + (p.minutes ? ` · ${p.minutes} min · ${p.sms} SMS` : '');
+    document.getElementById('sum-days').textContent = `${p.days} zile`;
     document.getElementById('sum-price').textContent = p.price;
     payBtn.textContent = `Plătește ${p.price}`;
     history.replaceState(null, '', `?plan=${encodeURIComponent(p.id)}`);
@@ -74,7 +73,7 @@
     for (const p of list) {
       const o = document.createElement('option');
       o.value = p.id;
-      o.textContent = `${p.name} - ${p.dataGb} GB / ${p.days} zile - ${p.price}`;
+      o.textContent = `${p.dataGb} GB · ${p.days} zile · ${p.price}`;
       select.append(o);
     }
     const wanted = new URLSearchParams(location.search).get('plan');

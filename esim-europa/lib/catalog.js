@@ -8,7 +8,6 @@
 // 1000 SMS. Celelalte pachete sunt EXEMPLE — înlocuiește-le cu ofertele și
 // prețurile furnizorului tău de eSIM înainte de lansare.
 const PLANS = [
-  { id: 'eu-3gb-7z', name: 'Start', dataGb: 3, days: 7, minutes: 0, sms: 0, priceBani: 3900, example: true },
   { id: 'eu-10gb-15z', name: 'Vacanță', dataGb: 10, days: 15, minutes: 60, sms: 100, priceBani: 7900, example: true },
   { id: 'eu-50gb-31z', name: 'Europa 50', dataGb: 50, days: 31, minutes: 120, sms: 1000, priceBani: 14900, popular: true, example: false },
   { id: 'eu-100gb-31z', name: 'Europa 100', dataGb: 100, days: 31, minutes: 120, sms: 1000, priceBani: 21900, example: true }

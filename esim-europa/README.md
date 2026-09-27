@@ -36,7 +36,7 @@ API: `GET /api/plans`, `GET /api/countries`, `GET /api/config`, `POST /api/order
 | `PORT` | portul serverului (implicit 3000) |
 | `PUBLIC_URL` | adresa publică, folosită în linkurile din email și în Stripe |
 | `ADMIN_TOKEN` | parola pentru `/admin.html` (fără ea, admin este dezactivat) |
-| `WHATSAPP_NUMBER` | numărul pentru butonul WhatsApp, format internațional fără `+` |
+| `WHATSAPP_NUMBER` | numărul pentru butonul WhatsApp, format internațional fără `+` (fără el, butonul nu apare) |
 | `STRIPE_SECRET_KEY` | dacă este setată, plata trece prin Stripe Checkout în loc de simulare |
 | `ESIM_SMDP_ADDRESS` | adresa SM-DP+ folosită de profilul de test |
 | `DATA_DIR` | unde se salvează comenzile (`orders.json`) și emailurile (`outbox/`) |

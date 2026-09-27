@@ -58,7 +58,7 @@ function createApp(options = {}) {
   const store = new OrderStore(path.join(dataDir, 'orders.json'));
   const outbox = path.join(dataDir, 'outbox');
   const adminToken = options.adminToken || process.env.ADMIN_TOKEN || '';
-  const whatsapp = process.env.WHATSAPP_NUMBER || '40700000000';
+  const whatsapp = (process.env.WHATSAPP_NUMBER || '').replace(/\D/g, '');
 
   // Vederea publică a unei comenzi: fără token-ul de acces și fără date interne.
   async function publicOrder(order) {

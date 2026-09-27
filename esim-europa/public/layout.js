@@ -6,38 +6,21 @@
   header.innerHTML = `
     <div class="wrap">
       <a class="logo" href="/">Mov<span>SIM</span></a>
-      <button class="menu-toggle" type="button" aria-label="Deschide meniul" aria-expanded="false">☰</button>
       <nav class="main" aria-label="Meniu principal">
-        <a href="/#pachete">Pachete</a>
         <a href="/#cum-functioneaza">Cum funcționează</a>
-        <a href="/#acoperire">Țări</a>
-        <a href="/#compatibilitate">Compatibilitate</a>
         <a href="/#intrebari">Întrebări</a>
-        <a class="btn" href="/#pachete">Cumpără eSIM</a>
+        <a class="btn small" href="/#pachete">Cumpără eSIM</a>
       </nav>
     </div>`;
   document.body.prepend(header);
-
-  const toggle = header.querySelector('.menu-toggle');
-  const nav = header.querySelector('nav.main');
-  toggle.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', String(open));
-  });
-  nav.addEventListener('click', (e) => {
-    if (e.target.closest('a')) {
-      nav.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-    }
-  });
 
   const footer = document.createElement('footer');
   footer.className = 'site';
   footer.innerHTML = `
     <div class="wrap">
-      <div>© ${new Date().getFullYear()} MovSIM (MVP). Plată în lei, livrare instant pe email.</div>
+      <div>© ${new Date().getFullYear()} MovSIM · Plată în lei, livrare pe email</div>
       <nav aria-label="Legal">
-        <a href="/termeni.html">Termeni și condiții</a>
+        <a href="/termeni.html">Termeni</a>
         <a href="/confidentialitate.html">Confidențialitate</a>
         <a href="https://anpc.ro/" rel="noopener" target="_blank">ANPC</a>
       </nav>
@@ -48,8 +31,9 @@
   wa.className = 'whatsapp';
   wa.target = '_blank';
   wa.rel = 'noopener';
-  wa.textContent = 'WhatsApp';
-  wa.href = 'https://wa.me/';
+  wa.setAttribute('aria-label', 'Scrie-ne pe WhatsApp');
+  wa.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C7 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6.1L5.5 21l4-2.1c.8.2 1.6.3 2.5.3 5 0 9-3.6 9-8.1S17 3 12 3z"/></svg>';
+  wa.hidden = true;
   document.body.append(wa);
 
   window.api = async function (path, options = {}) {
@@ -65,7 +49,10 @@
 
   window.appConfig = api('/api/config').then((cfg) => {
     const text = encodeURIComponent('Bună! Am o întrebare despre MovSIM.');
-    wa.href = `https://wa.me/${cfg.whatsapp}?text=${text}`;
+    if (cfg.whatsapp) {
+      wa.href = `https://wa.me/${cfg.whatsapp}?text=${text}`;
+      wa.hidden = false;
+    }
     return cfg;
   }).catch(() => ({}));
 })();

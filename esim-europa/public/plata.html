@@ -6,21 +6,21 @@
   <title>Plată simulată | MovSIM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
-  <meta name="theme-color" content="#170c2b">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <meta name="theme-color" content="#130a22">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 <main>
   <section>
-    <div class="wrap" style="max-width:560px">
+    <div class="wrap narrow">
       <div class="card">
         <h1>Plată (simulare)</h1>
         <p class="notice">Aceasta este pagina de plată din modul demo. În producție este înlocuită de procesatorul de plăți (ex. Stripe Checkout), iar cardul nu trece prin serverul tău.</p>
         <p>Comanda: <b id="order-id">—</b></p>
         <p>De plată: <b id="amount">—</b></p>
         <p>Email: <span id="email">—</span></p>
-        <p style="display:flex;gap:10px;flex-wrap:wrap">
+        <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
           <button class="btn" id="pay-ok">Simulează plată reușită</button>
           <button class="btn danger" id="pay-fail">Simulează plată refuzată</button>
         </p>
