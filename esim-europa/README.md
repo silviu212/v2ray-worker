@@ -23,11 +23,10 @@ npm test           # teste API (node:test)
 | `/checkout.html?plan=…` | Alegere/schimbare pachet, email, nume, confirmare compatibilitate, acceptare termeni, validare, buton „Plătește X lei” |
 | `/plata.html` | Plată **simulată** (reușită / refuzată) – doar în modul demo |
 | `/comanda.html?order=…&token=…` | Cod QR, instalare manuală (SM-DP+ + cod activare, butoane „Copiază”), instrucțiuni iPhone/Android, „Retrimite emailul”, stări: în așteptare / refuzată / livrată |
-| `/admin.html` | Lista comenzilor (cere `ADMIN_TOKEN`) |
 | `/termeni.html`, `/confidentialitate.html` | Șabloane – trebuie completate de un jurist |
 
 API: `GET /api/plans`, `GET /api/countries`, `GET /api/config`, `POST /api/orders`,
-`GET /api/orders/:id?token=`, `POST /api/orders/:id/mock-pay`, `POST /api/orders/:id/resend`, `GET /api/admin/orders`.
+`GET /api/orders/:id?token=`, `POST /api/orders/:id/mock-pay`, `POST /api/orders/:id/resend`.
 
 Instalare pe un VPS (Ubuntu, HTTPS automat): vezi [DEPLOY.md](DEPLOY.md).
 
@@ -39,7 +38,6 @@ Instalare pe un VPS (Ubuntu, HTTPS automat): vezi [DEPLOY.md](DEPLOY.md).
 | `HOST` | adresa pe care ascultă serverul (implicit `0.0.0.0`; pe VPS `127.0.0.1`) |
 | `SITE_ID` | eticheta site-ului (ex. `silviu`, `prieten`): litere mici, cifre, cratimă |
 | `PUBLIC_URL` | adresa publică, folosită în linkurile din email și în Stripe |
-| `ADMIN_TOKEN` | parola pentru `/admin.html` (fără ea, admin este dezactivat) |
 | `WHATSAPP_NUMBER` | numărul pentru butonul WhatsApp, format internațional fără `+` (fără el, butonul nu apare) |
 | `STRIPE_SECRET_KEY` | dacă este setată, plata trece prin Stripe Checkout în loc de simulare |
 | `ESIM_SMDP_ADDRESS` | adresa SM-DP+ folosită de profilul de test |
@@ -59,7 +57,7 @@ Instalare pe un VPS (Ubuntu, HTTPS automat): vezi [DEPLOY.md](DEPLOY.md).
 
 Fiecare site rulează cu propriul `SITE_ID`. Eticheta ajunge automat:
 
-- pe comandă (`orders.json`, coloana „Site” din `/admin.html`);
+- pe comandă (câmpul `site` din `orders.json`, în `DATA_DIR`);
 - la Stripe, în `metadata[site]` și `metadata[order_id]`, atât pe sesiunea de checkout cât și pe plată (PaymentIntent). În panoul Stripe poți filtra/exporta plățile după aceste câmpuri;
 - la furnizorul eSIM, ca referință `site:comandă` (`lib/provider.js`). La integrarea cu furnizorul real, trimite-o în câmpul de referință al comenzii, dacă API-ul lor are unul, sau folosește chei API separate pe site.
 

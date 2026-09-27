@@ -14,7 +14,7 @@ let dataDir;
 test.before(async () => {
   delete process.env.STRIPE_SECRET_KEY;
   dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'esim-'));
-  server = createApp({ dataDir, adminToken: 'secret', siteId: 'silviu' });
+  server = createApp({ dataDir, siteId: 'silviu' });
   await new Promise((r) => server.listen(0, r));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -81,13 +81,9 @@ test('comanda nu poate fi citită fără token corect', async () => {
   assert.strictEqual((await fetch(`${base}/api/orders/${orderId}`)).status, 404);
 });
 
-test('admin cere token', async () => {
-  assert.strictEqual((await fetch(base + '/api/admin/orders')).status, 401);
-  const res = await fetch(base + '/api/admin/orders', { headers: { Authorization: 'Bearer secret' } });
-  assert.strictEqual(res.status, 200);
-  const rows = await res.json();
-  assert.ok(rows.length >= 3);
-  assert.ok(rows.every((r) => r.site === 'silviu'));
+test('zona de admin nu mai există', async () => {
+  assert.strictEqual((await fetch(base + '/api/admin/orders')).status, 404);
+  assert.strictEqual((await fetch(base + '/admin.html')).status, 404);
 });
 
 test('servește paginile și blochează path traversal', async () => {

@@ -56,8 +56,7 @@ Dacă repository-ul e privat, `git clone` îți cere autentificare: folosește u
 mkdir -p /etc/movsim
 cp /opt/movsim/esim-europa/deploy/site.env.example /etc/movsim/silviu.env
 chmod 600 /etc/movsim/silviu.env
-openssl rand -hex 24          # copiază rezultatul la ADMIN_TOKEN
-nano /etc/movsim/silviu.env   # completează SITE_ID, PORT, PUBLIC_URL, ADMIN_TOKEN
+nano /etc/movsim/silviu.env   # completează SITE_ID, PORT, PUBLIC_URL
 ```
 
 ## 5. Pornirea serviciului
@@ -87,12 +86,12 @@ de la pasul 1 indică spre VPS.
 ```bash
 cp /opt/movsim/esim-europa/deploy/site.env.example /etc/movsim/prieten.env
 chmod 600 /etc/movsim/prieten.env
-nano /etc/movsim/prieten.env   # SITE_ID=prieten, PORT=3002, domeniul lui, alt ADMIN_TOKEN
+nano /etc/movsim/prieten.env   # SITE_ID=prieten, PORT=3002, domeniul lui
 systemctl enable --now movsim@prieten
 systemctl reload caddy
 ```
 
-Fiecare site are propriile comenzi în `/var/lib/movsim/<site>/` și propria parolă de admin.
+Fiecare site are propriile comenzi în `/var/lib/movsim/<site>/orders.json`.
 
 ## Întreținere
 

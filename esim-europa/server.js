@@ -57,7 +57,6 @@ function createApp(options = {}) {
   const dataDir = options.dataDir || process.env.DATA_DIR || path.join(__dirname, 'data');
   const store = new OrderStore(path.join(dataDir, 'orders.json'));
   const outbox = path.join(dataDir, 'outbox');
-  const adminToken = options.adminToken || process.env.ADMIN_TOKEN || '';
   const whatsapp = (process.env.WHATSAPP_NUMBER || '').replace(/\D/g, '');
   // Eticheta site-ului: se pune pe fiecare comandă, plată și eSIM, ca vânzările
   // a două site-uri care folosesc aceleași conturi să poată fi despărțite.
@@ -205,15 +204,6 @@ function createApp(options = {}) {
         await emailEsim(order, baseUrl);
         return sendJson(res, 200, { ok: true });
       }
-    }
-
-    if (req.method === 'GET' && url.pathname === '/api/admin/orders') {
-      const auth = req.headers.authorization || '';
-      if (!adminToken || !safeEqual(auth, `Bearer ${adminToken}`)) return sendJson(res, 401, { error: 'Neautorizat' });
-      return sendJson(res, 200, store.list().map((o) => ({
-        id: o.id, site: o.site, email: o.email, name: o.name, planId: o.planId, amount: formatLei(o.amountBani),
-        status: o.status, createdAt: o.createdAt, iccid: o.esim && o.esim.iccid
-      })));
     }
 
     return sendJson(res, 404, { error: 'Rută inexistentă' });
