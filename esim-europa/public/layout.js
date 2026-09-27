@@ -5,7 +5,7 @@
   header.className = 'site';
   header.innerHTML = `
     <div class="wrap">
-      <a class="logo" href="/">eSIM <span>Europa</span></a>
+      <a class="logo" href="/">Mov<span>SIM</span></a>
       <button class="menu-toggle" type="button" aria-label="Deschide meniul" aria-expanded="false">☰</button>
       <nav class="main" aria-label="Meniu principal">
         <a href="/#pachete">Pachete</a>
@@ -35,7 +35,7 @@
   footer.className = 'site';
   footer.innerHTML = `
     <div class="wrap">
-      <div>© ${new Date().getFullYear()} eSIM Europa (MVP). Plată în lei, livrare instant pe email.</div>
+      <div>© ${new Date().getFullYear()} MovSIM (MVP). Plată în lei, livrare instant pe email.</div>
       <nav aria-label="Legal">
         <a href="/termeni.html">Termeni și condiții</a>
         <a href="/confidentialitate.html">Confidențialitate</a>
@@ -64,7 +64,7 @@
   };
 
   window.appConfig = api('/api/config').then((cfg) => {
-    const text = encodeURIComponent('Bună! Am o întrebare despre eSIM Europa.');
+    const text = encodeURIComponent('Bună! Am o întrebare despre MovSIM.');
     wa.href = `https://wa.me/${cfg.whatsapp}?text=${text}`;
     return cfg;
   }).catch(() => ({}));

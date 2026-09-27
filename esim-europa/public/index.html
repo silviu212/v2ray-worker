@@ -3,8 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>eSIM Europa - Date, apeluri și SMS | Activare instant</title>
+  <title>MovSIM - eSIM pentru Europa | Activare instant</title>
   <meta name="description" content="Cumpără online un eSIM pentru Europa, plătești în lei și primești codul QR pe email în câteva secunde.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+  <meta name="theme-color" content="#170c2b">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -99,6 +103,7 @@
         <div class="gb"></div>
         <ul></ul>
         <div class="price"></div>
+        <div class="per-gb"></div>
         <a class="btn block">Cumpără</a>`;
       card.querySelector('.name').textContent = p.name;
       card.querySelector('.gb').textContent = `${p.dataGb} GB`;
@@ -106,6 +111,7 @@
       const items = [`Valabil ${p.days} zile`, p.minutes ? `${p.minutes} minute internaționale` : 'Doar date mobile', p.sms ? `${p.sms} SMS` : null];
       for (const t of items.filter(Boolean)) { const li = document.createElement('li'); li.textContent = t; ul.append(li); }
       card.querySelector('.price').textContent = p.price;
+      card.querySelector('.per-gb').textContent = `${(p.priceBani / 100 / p.dataGb).toFixed(2).replace('.', ',')} lei/GB`;
       const buy = card.querySelector('a.btn');
       buy.href = `/checkout.html?plan=${encodeURIComponent(p.id)}`;
       buy.dataset.plan = p.id;

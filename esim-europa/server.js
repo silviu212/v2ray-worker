@@ -249,7 +249,7 @@ function createApp(options = {}) {
 if (require.main === module) {
   const port = Number(process.env.PORT) || 3000;
   createApp().listen(port, () => {
-    console.log(`eSIM Europa MVP pornit pe http://localhost:${port} (plăți: ${payments.mode()})`);
+    console.log(`MovSIM MVP pornit pe http://localhost:${port} (plăți: ${payments.mode()})`);
   });
 }
 

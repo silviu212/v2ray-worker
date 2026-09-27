@@ -1,6 +1,9 @@
-# eSIM Europa – MVP
+# MovSIM – MVP magazin eSIM Europa
 
-Magazin online minimal pentru eSIM-uri de călătorie în Europa, inspirat de fluxul de pe esimeuropa.ro:
+Magazin online minimal pentru eSIM-uri de călătorie în Europa, inspirat de fluxul de pe esimeuropa.ro, cu temă mov închis.
+„MovSIM” este un nume provizoriu (nu folosi numele sau marca altei firme); îl schimbi în `public/*.html` și `public/layout.js`.
+
+Flux:
 alegi pachetul → plătești în lei → primești codul QR pe email și pe pagina comenzii.
 
 ## Pornire
