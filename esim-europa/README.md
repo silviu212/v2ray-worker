@@ -29,11 +29,14 @@ npm test           # teste API (node:test)
 API: `GET /api/plans`, `GET /api/countries`, `GET /api/config`, `POST /api/orders`,
 `GET /api/orders/:id?token=`, `POST /api/orders/:id/mock-pay`, `POST /api/orders/:id/resend`, `GET /api/admin/orders`.
 
+Instalare pe un VPS (Ubuntu, HTTPS automat): vezi [DEPLOY.md](DEPLOY.md).
+
 ## Configurare (variabile de mediu)
 
 | Variabilă | Rol |
 | --- | --- |
 | `PORT` | portul serverului (implicit 3000) |
+| `HOST` | adresa pe care ascultă serverul (implicit `0.0.0.0`; pe VPS `127.0.0.1`) |
 | `SITE_ID` | eticheta site-ului (ex. `silviu`, `prieten`): litere mici, cifre, cratimă |
 | `PUBLIC_URL` | adresa publică, folosită în linkurile din email și în Stripe |
 | `ADMIN_TOKEN` | parola pentru `/admin.html` (fără ea, admin este dezactivat) |

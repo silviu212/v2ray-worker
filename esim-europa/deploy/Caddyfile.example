@@ -1,0 +1,13 @@
+# Copiază în /etc/caddy/Caddyfile și înlocuiește domeniile.
+# Caddy obține și reînnoiește automat certificatele HTTPS (Let's Encrypt).
+
+exemplu-silviu.ro, www.exemplu-silviu.ro {
+	encode gzip
+	reverse_proxy 127.0.0.1:3001
+}
+
+# Site-ul prietenului, pe același VPS (opțional)
+exemplu-prieten.ro, www.exemplu-prieten.ro {
+	encode gzip
+	reverse_proxy 127.0.0.1:3002
+}

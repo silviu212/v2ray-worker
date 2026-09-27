@@ -253,8 +253,11 @@ function createApp(options = {}) {
 
 if (require.main === module) {
   const port = Number(process.env.PORT) || 3000;
-  createApp().listen(port, () => {
-    console.log(`MovSIM MVP pornit pe http://localhost:${port} (site: ${process.env.SITE_ID || 'site1'}, plăți: ${payments.mode()})`);
+  // Pe VPS setează HOST=127.0.0.1, ca aplicația să fie accesibilă doar prin
+  // serverul web (Caddy) care se ocupă de HTTPS.
+  const host = process.env.HOST || '0.0.0.0';
+  createApp().listen(port, host, () => {
+    console.log(`MovSIM MVP pornit pe http://${host}:${port} (site: ${process.env.SITE_ID || 'site1'}, plăți: ${payments.mode()})`);
   });
 }
 

@@ -1,0 +1,31 @@
+# Serviciu systemd pentru un site MovSIM. „%i” este numele site-ului, de ex.
+# movsim@silviu citește /etc/movsim/silviu.env și salvează datele în
+# /var/lib/movsim/silviu. Instalare: vezi DEPLOY.md.
+[Unit]
+Description=MovSIM (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=movsim
+Group=movsim
+WorkingDirectory=/opt/movsim/esim-europa
+EnvironmentFile=/etc/movsim/%i.env
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=DATA_DIR=/var/lib/movsim/%i
+StateDirectory=movsim/%i
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=3
+
+# Izolare: aplicația poate scrie doar în directorul ei de date.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/movsim/%i
+
+[Install]
+WantedBy=multi-user.target
