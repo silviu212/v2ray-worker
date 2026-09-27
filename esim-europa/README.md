@@ -28,7 +28,14 @@ npm test           # teste API (node:test)
 API: `GET /api/plans`, `GET /api/countries`, `GET /api/config`, `POST /api/orders`,
 `GET /api/orders/:id?token=`, `POST /api/orders/:id/mock-pay`, `POST /api/orders/:id/resend`.
 
-Instalare pe un VPS (Ubuntu, HTTPS automat): vezi [DEPLOY.md](DEPLOY.md).
+Cu Docker:
+
+```bash
+cp env/silviu.env.example env/silviu.env   # completează
+docker compose up -d --build               # site + Caddy (HTTPS)
+```
+
+Instalare pe un VPS (Docker sau direct, HTTPS automat): vezi [DEPLOY.md](DEPLOY.md).
 
 ## Configurare (variabile de mediu)
 

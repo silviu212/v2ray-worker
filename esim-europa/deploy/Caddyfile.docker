@@ -1,0 +1,13 @@
+# Caddyfile pentru docker-compose. Înlocuiește domeniile cu ale voastre.
+# Caddy obține și reînnoiește automat certificatele HTTPS (Let's Encrypt).
+
+exemplu-silviu.ro, www.exemplu-silviu.ro {
+	encode gzip
+	reverse_proxy silviu:3000
+}
+
+# Site-ul prietenului (șterge blocul dacă nu rulează pe acest server)
+exemplu-prieten.ro, www.exemplu-prieten.ro {
+	encode gzip
+	reverse_proxy prieten:3000
+}

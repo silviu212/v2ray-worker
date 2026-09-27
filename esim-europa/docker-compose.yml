@@ -1,0 +1,36 @@
+# Pornire: docker compose up -d --build   (detalii în DEPLOY.md)
+# Aplicațiile nu sunt expuse direct pe internet; doar Caddy ascultă pe 80/443.
+
+services:
+  silviu:
+    build: .
+    env_file: ./env/silviu.env
+    volumes:
+      - silviu-data:/data
+    restart: unless-stopped
+
+  prieten:
+    build: .
+    env_file: ./env/prieten.env
+    volumes:
+      - prieten-data:/data
+    restart: unless-stopped
+    profiles: ["prieten"]   # pornește doar cu: docker compose --profile prieten up -d
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile.docker:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+
+volumes:
+  silviu-data:
+  prieten-data:
+  caddy-data:
+  caddy-config:
