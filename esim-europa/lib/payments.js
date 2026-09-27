@@ -33,6 +33,12 @@ async function createPayment(order, plan, baseUrl) {
     mode: 'payment',
     customer_email: order.email,
     client_reference_id: order.id,
+    // Eticheta site-ului, vizibilă în panoul Stripe și în exporturi, atât pe
+    // sesiunea de checkout cât și pe plata propriu-zisă (PaymentIntent).
+    'metadata[site]': order.site,
+    'metadata[order_id]': order.id,
+    'payment_intent_data[metadata][site]': order.site,
+    'payment_intent_data[metadata][order_id]': order.id,
     success_url: back,
     cancel_url: `${baseUrl}/checkout.html?plan=${plan.id}`,
     'line_items[0][quantity]': '1',

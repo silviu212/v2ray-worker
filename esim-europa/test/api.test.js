@@ -14,7 +14,7 @@ let dataDir;
 test.before(async () => {
   delete process.env.STRIPE_SECRET_KEY;
   dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'esim-'));
-  server = createApp({ dataDir, adminToken: 'secret' });
+  server = createApp({ dataDir, adminToken: 'secret', siteId: 'silviu' });
   await new Promise((r) => server.listen(0, r));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -52,6 +52,9 @@ test('flux complet: comandă -> plată simulată -> eSIM livrat + email', async 
   assert.match(paid.esim.lpa, /^LPA:1\$[^$]+\$[0-9A-F]{20}$/);
   assert.match(paid.esim.qr, /^data:image\/png;base64,/);
   assert.match(paid.esim.iccid, /^\d{19}$/);
+  const stored = JSON.parse(fs.readFileSync(path.join(dataDir, 'orders.json'), 'utf8'))[orderId];
+  assert.strictEqual(stored.site, 'silviu');
+  assert.strictEqual(stored.esim.reference, `silviu:${orderId}`);
 
   // O a doua plată nu generează un alt eSIM.
   const again = await (await post(`/api/orders/${orderId}/mock-pay`, { token, outcome: 'success' })).json();
@@ -82,7 +85,9 @@ test('admin cere token', async () => {
   assert.strictEqual((await fetch(base + '/api/admin/orders')).status, 401);
   const res = await fetch(base + '/api/admin/orders', { headers: { Authorization: 'Bearer secret' } });
   assert.strictEqual(res.status, 200);
-  assert.ok((await res.json()).length >= 3);
+  const rows = await res.json();
+  assert.ok(rows.length >= 3);
+  assert.ok(rows.every((r) => r.site === 'silviu'));
 });
 
 test('servește paginile și blochează path traversal', async () => {
@@ -90,4 +95,8 @@ test('servește paginile și blochează path traversal', async () => {
   assert.strictEqual((await fetch(base + '/checkout.html')).status, 200);
   assert.notStrictEqual((await fetch(base + '/..%2fserver.js')).status, 200);
   assert.strictEqual((await fetch(base + '/nu-exista.html')).status, 404);
+});
+
+test('SITE_ID invalid oprește pornirea', () => {
+  assert.throws(() => createApp({ dataDir, siteId: 'Site Silviu!' }), /SITE_ID/);
 });

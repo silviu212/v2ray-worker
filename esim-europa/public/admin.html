@@ -23,7 +23,7 @@
       <p class="result" id="msg" role="alert"></p>
       <div class="table-wrap">
         <table hidden id="table">
-          <thead><tr><th>Comandă</th><th>Data</th><th>Client</th><th>Pachet</th><th>Sumă</th><th>Status</th><th>ICCID</th></tr></thead>
+          <thead><tr><th>Comandă</th><th>Site</th><th>Data</th><th>Client</th><th>Pachet</th><th>Sumă</th><th>Status</th><th>ICCID</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -44,8 +44,8 @@
       tbody.innerHTML = '';
       for (const o of rows) {
         const tr = document.createElement('tr');
-        const cells = [o.id, new Date(o.createdAt).toLocaleString('ro-RO'), `${o.name} <${o.email}>`, o.planId, o.amount, o.status, o.iccid || '—'];
-        cells.forEach((c, i) => { const td = document.createElement('td'); td.textContent = c; if (i === 5) td.className = `status ${c}`; tr.append(td); });
+        const cells = [o.id, o.site || '—', new Date(o.createdAt).toLocaleString('ro-RO'), `${o.name} <${o.email}>`, o.planId, o.amount, o.status, o.iccid || '—'];
+        cells.forEach((c, i) => { const td = document.createElement('td'); td.textContent = c; if (i === 6) td.className = `status ${c}`; tr.append(td); });
         tbody.append(tr);
       }
       document.getElementById('table').hidden = false;

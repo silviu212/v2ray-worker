@@ -59,6 +59,10 @@ function createApp(options = {}) {
   const outbox = path.join(dataDir, 'outbox');
   const adminToken = options.adminToken || process.env.ADMIN_TOKEN || '';
   const whatsapp = (process.env.WHATSAPP_NUMBER || '').replace(/\D/g, '');
+  // Eticheta site-ului: se pune pe fiecare comandă, plată și eSIM, ca vânzările
+  // a două site-uri care folosesc aceleași conturi să poată fi despărțite.
+  const siteId = options.siteId || process.env.SITE_ID || 'site1';
+  if (!/^[a-z0-9-]{1,32}$/.test(siteId)) throw new Error('SITE_ID poate conține doar litere mici, cifre și cratimă (max. 32)');
 
   // Vederea publică a unei comenzi: fără token-ul de acces și fără date interne.
   async function publicOrder(order) {
@@ -108,7 +112,7 @@ function createApp(options = {}) {
     const job = (async () => {
       const plan = findPlan(order.planId);
       store.update(order.id, { status: 'paid', paidAt: new Date().toISOString() });
-      const esim = await provisionEsim(plan);
+      const esim = await provisionEsim(plan, { site: order.site, orderId: order.id });
       const done = store.update(order.id, { status: 'delivered', esim, deliveredAt: new Date().toISOString() });
       await emailEsim(done, baseUrl);
       return done;
@@ -153,6 +157,7 @@ function createApp(options = {}) {
       const order = store.create({
         id: 'ES-' + crypto.randomBytes(4).toString('hex').toUpperCase(),
         token: crypto.randomBytes(16).toString('hex'),
+        site: siteId,
         planId: plan.id,
         amountBani: plan.priceBani,
         email,
@@ -206,7 +211,7 @@ function createApp(options = {}) {
       const auth = req.headers.authorization || '';
       if (!adminToken || !safeEqual(auth, `Bearer ${adminToken}`)) return sendJson(res, 401, { error: 'Neautorizat' });
       return sendJson(res, 200, store.list().map((o) => ({
-        id: o.id, email: o.email, name: o.name, planId: o.planId, amount: formatLei(o.amountBani),
+        id: o.id, site: o.site, email: o.email, name: o.name, planId: o.planId, amount: formatLei(o.amountBani),
         status: o.status, createdAt: o.createdAt, iccid: o.esim && o.esim.iccid
       })));
     }
@@ -249,7 +254,7 @@ function createApp(options = {}) {
 if (require.main === module) {
   const port = Number(process.env.PORT) || 3000;
   createApp().listen(port, () => {
-    console.log(`MovSIM MVP pornit pe http://localhost:${port} (plăți: ${payments.mode()})`);
+    console.log(`MovSIM MVP pornit pe http://localhost:${port} (site: ${process.env.SITE_ID || 'site1'}, plăți: ${payments.mode()})`);
   });
 }
 

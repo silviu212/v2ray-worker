@@ -34,6 +34,7 @@ API: `GET /api/plans`, `GET /api/countries`, `GET /api/config`, `POST /api/order
 | Variabilă | Rol |
 | --- | --- |
 | `PORT` | portul serverului (implicit 3000) |
+| `SITE_ID` | eticheta site-ului (ex. `silviu`, `prieten`): litere mici, cifre, cratimă |
 | `PUBLIC_URL` | adresa publică, folosită în linkurile din email și în Stripe |
 | `ADMIN_TOKEN` | parola pentru `/admin.html` (fără ea, admin este dezactivat) |
 | `WHATSAPP_NUMBER` | numărul pentru butonul WhatsApp, format internațional fără `+` (fără el, butonul nu apare) |
@@ -50,3 +51,13 @@ API: `GET /api/plans`, `GET /api/countries`, `GET /api/config`, `POST /api/order
 5. **Lista de țări** – trebuie aliniată cu acoperirea furnizorului.
 6. **Stocarea** – un fișier JSON; pentru trafic real folosește o bază de date.
 7. **Facturare** (e-Factura/SmartBill etc.), datele firmei, termenii legali și GDPR.
+
+## Două site-uri pe aceleași conturi (plăți + furnizor eSIM)
+
+Fiecare site rulează cu propriul `SITE_ID`. Eticheta ajunge automat:
+
+- pe comandă (`orders.json`, coloana „Site” din `/admin.html`);
+- la Stripe, în `metadata[site]` și `metadata[order_id]`, atât pe sesiunea de checkout cât și pe plată (PaymentIntent). În panoul Stripe poți filtra/exporta plățile după aceste câmpuri;
+- la furnizorul eSIM, ca referință `site:comandă` (`lib/provider.js`). La integrarea cu furnizorul real, trimite-o în câmpul de referință al comenzii, dacă API-ul lor are unul, sau folosește chei API separate pe site.
+
+Verificare lunară, pentru fiecare site: plăți încasate cu eticheta lui (Stripe) = eSIM-uri emise cu eticheta lui (furnizor). Un eSIM fără plată corespunzătoare trebuie investigat.
